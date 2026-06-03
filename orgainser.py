@@ -9,7 +9,7 @@ import time
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
-    handlers=[logging.FileHandler("file_sorter.log"), logging.StreamHandler()],
+    handlers=[logging.FileHandler("file_organiser.log"), logging.StreamHandler()],
 )
 
 DEFAULT_PATH = Path.home() / "Downloads"

@@ -12,7 +12,7 @@ By default, the script sorts files in your Downloads folder, but you can specify
 * Prevents overwriting existing files using automatic renaming (_1, _2, etc.)
 * Skips system and temporary files (.DS_Store, etc.)
 * Ignores partial downloads (.crdownload, .part, .download)
-*Avoids processing files that are actively being written (stability check)
+* Avoids processing files that are actively being written (stability check)
 * Dry-run mode for safe preview of actions
 * Logs file movements and errors
 * Supports custom target directories via command-line arguments
@@ -57,7 +57,7 @@ python organiser.py --dry-run
 The script writes logs to:
 
 ```text
-file_sorter.log
+file_organiser.log
 ```
 
 and also outputs log messages to the console.
