@@ -9,6 +9,11 @@ By default, the script sorts files in your Downloads folder, but you can specify
 * Organises files by extension into category folders
 * Automatically creates destination folders when needed
 * Moves uncategorised files into an `Other` folder
+* Prevents overwriting existing files using automatic renaming (_1, _2, etc.)
+* Skips system and temporary files (.DS_Store, etc.)
+* Ignores partial downloads (.crdownload, .part, .download)
+*Avoids processing files that are actively being written (stability check)
+* Dry-run mode for safe preview of actions
 * Logs file movements and errors
 * Supports custom target directories via command-line arguments
 * Uses only Python standard library modules
@@ -41,10 +46,10 @@ Sort a specific directory:
 python organiser.py /path/to/folder
 ```
 
-Example:
+Dry Run:
 
 ```bash
-python organiser.py ~/Desktop/TestFiles
+python organiser.py --dry-run
 ```
 
 ## Logging
