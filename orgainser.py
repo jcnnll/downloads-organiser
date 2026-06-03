@@ -23,6 +23,12 @@ FILE_TYPES = {
     "Config": ["json", "yml", "yaml"],
 }
 
+IGNORED_FILES = {
+    ".DS_Store",
+    ".localized",
+    "Thumbs.db",
+}
+
 EXTENSION_MAP = {
     ext.lower().strip("."): category
     for category, extensions in FILE_TYPES.items()
@@ -30,28 +36,42 @@ EXTENSION_MAP = {
 }
 
 
+def get_unique_destination(destination_file: Path) -> Path:
+    """Ensures that the destination file does not get overwritten."""
+    counter = 1
+
+    while destination_file.exists():
+        destination_file = (
+            destination_file.parent
+            / f"{destination_file.stem}_{counter}{destination_file.suffix}"
+        )
+        counter += 1
+
+    return destination_file
+
+
 def move_file(
     source: Path, destination_dir: Path, is_uncategorised: bool = False
 ) -> None:
-    """Handles directory creation, file movement, and scoped error logging."""
+    """Handles directory creation, file movement, and scoped logging."""
     try:
-        destination_dir.mkdir(exist_ok=True)
-        destination_file = destination_dir / source.name
+        destination_dir.mkdir(parents=True, exist_ok=True)
+        destination_file = get_unique_destination(destination_dir / source.name)
 
         shutil.move(str(source), str(destination_file))
 
         if is_uncategorised:
             logging.warning(
-                f"Moved uncategorised file '{source}' to '{destination_file}'"
+                f"Moved uncategorised file '{source.name}' -> '{destination_dir.name}/{destination_file.name}'"
             )
         else:
-            logging.info(f"Moved '{source}' to '{destination_file}'")
+            logging.info(f"Moved '{source.name}' -> '{destination_dir.name}/{destination_file.name}'")
 
     except Exception as e:
-        logging.error(f"Failed to move '{source}': {e}")
+        logging.error(f"Failed to move '{source.name}': {e}")
 
 
-def sort_target_folder(target_path) -> None:
+def sort_target_folder(target_path: Path) -> None:
     """Iterates over the target folder and sorts files by extension."""
     logging.info(f"Starting to sort for: '{target_path}'")
 
@@ -62,6 +82,9 @@ def sort_target_folder(target_path) -> None:
     try:
         for file_path in target_path.iterdir():
             if not file_path.is_file():
+                continue
+
+            if file_path.name in IGNORED_FILES:
                 continue
 
             file_ext = file_path.suffix.lower().strip(".")
